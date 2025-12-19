@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QYNTRA - Intelligent Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              midnight: {
+                800: "rgb(var(--color-midnight-800) / <alpha-value>)",
+                900: "rgb(var(--color-midnight-900) / <alpha-value>)",
+                950: "rgb(var(--color-midnight-950) / <alpha-value>)", // Main background
+              },
+              brand: {
+                primary: "rgb(var(--color-brand-primary) / <alpha-value>)",
+                secondary: "rgb(var(--color-brand-secondary) / <alpha-value>)",
+                accent: "rgb(var(--color-brand-accent) / <alpha-value>)",
+                glow: "rgb(var(--color-brand-glow) / <alpha-value>)",
+              },
+              surface: {
+                100: "rgba(255, 255, 255, 0.03)",
+                200: "rgba(255, 255, 255, 0.05)",
+                300: "rgba(255, 255, 255, 0.1)",
+              },
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              display: ['"Space Grotesk"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+              "brand-gradient":
+                "linear-gradient(135deg, rgb(var(--color-brand-primary)) 0%, rgb(var(--color-brand-accent)) 100%)",
+              "subtle-glow":
+                "radial-gradient(circle at 50% 0%, rgb(var(--color-brand-accent) / 0.15) 0%, rgb(var(--color-midnight-950) / 0) 60%)",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Default Theme (Leximera) */
+        --color-midnight-800: 30 41 59; /* #1e293b */
+        --color-midnight-900: 15 23 42; /* #0f172a */
+        --color-midnight-950: 2 6 23; /* #020617 */
+        --color-brand-primary: 79 70 229; /* #4f46e5 */
+        --color-brand-secondary: 99 102 241; /* #6366f1 */
+        --color-brand-accent: 6 182 212; /* #06b6d4 */
+        --color-brand-glow: 34 211 238; /* #22d3ee */
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: rgb(var(--color-midnight-950));
+        background-image: radial-gradient(
+          circle at 50% -20%,
+          rgb(var(--color-midnight-800)) 0%,
+          rgb(var(--color-midnight-950)) 60%
+        );
+        color: #f8fafc; /* slate-50 */
+        min-height: 100vh;
+        transition: background-color 0.5s ease;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Space Grotesk", sans-serif;
+        letter-spacing: -0.02em;
+      }
+
+      code,
+      pre {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .glass-panel {
+        background: rgb(var(--color-midnight-900) / 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .glass-input {
+        background: rgb(var(--color-midnight-950) / 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 0 0 transparent;
+        transition: all 0.3s ease;
+      }
+
+      .glass-input:focus-within {
+        border-color: rgb(var(--color-brand-accent) / 0.3);
+        box-shadow: 0 0 20px rgb(var(--color-brand-accent) / 0.1);
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+          "react/": "https://esm.sh/react@^19.2.3/",
+          "react": "https://esm.sh/react@^19.2.3"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

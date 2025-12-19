@@ -1,0 +1,7 @@
+{
+  "name": "QYNTRA",
+  "description": "A precise, intelligent AI copilot built for builders. Features advanced code generation and architectural reasoning.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
