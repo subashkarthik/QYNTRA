@@ -16,7 +16,7 @@ export default function App() {
   const [modelConfig, setModelConfig] = useState<ModelConfig>(DEFAULT_MODEL_CONFIG);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
   const [showSettings, setShowSettings] = useState(false);
   const [showLiveMode, setShowLiveMode] = useState(false);
   const [showDocuments, setShowDocuments] = useState(false);
@@ -161,12 +161,32 @@ export default function App() {
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       
       <div className="flex h-screen overflow-hidden text-slate-100 selection:bg-brand-accent/30 selection:text-brand-glow">
+        {/* Mobile Overlay Backdrop */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        
         <Sidebar 
           isOpen={sidebarOpen} 
           sessions={sessions}
           activeSessionId={activeSessionId}
-          onSelectSession={setActiveSessionId}
-          onNewSession={() => setActiveSessionId(null)}
+          onSelectSession={(id) => {
+            setActiveSessionId(id);
+            // Auto-close sidebar on mobile after selecting a session
+            if (window.innerWidth < 768) {
+              setSidebarOpen(false);
+            }
+          }}
+          onNewSession={() => {
+            setActiveSessionId(null);
+            // Auto-close sidebar on mobile after creating new session
+            if (window.innerWidth < 768) {
+              setSidebarOpen(false);
+            }
+          }}
           onDeleteSession={handleDeleteSession}
           onClearAll={handleClearAll}
           onOpenSettings={() => setShowSettings(true)}
