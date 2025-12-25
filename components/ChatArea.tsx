@@ -494,7 +494,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                       value={input}
                       onChange={handleInputResize}
                       onKeyDown={handleKeyDown}
-                      placeholder="Input prompt, paste code for refactoring, or define architecture..."
+                      placeholder="Input prompt, paste code for refactoring, or try /image <description>..."
                       className="w-full bg-transparent text-slate-100 pl-6 pr-14 py-4 min-h-[60px] max-h-60 resize-none focus:outline-none placeholder:text-slate-600 text-sm leading-relaxed scrollbar-hide font-light"
                       rows={1}
                     />
