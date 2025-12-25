@@ -7,6 +7,7 @@ import { Logo } from './Logo';
 import { PreviewPanel } from './PreviewPanel';
 import { embeddingService } from '../services/embeddingService';
 import { vectorStore } from '../services/vectorStore';
+import { imageService } from '../services/imageService';
 
 interface ChatAreaProps {
   activeSessionId: string | null;
@@ -70,6 +71,72 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   const handleSend = async () => {
     if ((!input.trim() && !attachment) || isLoading) return;
 
+    // Check for /image command
+    const imageCommand = imageService.parseImageCommand(input);
+    
+    if (imageCommand.isCommand) {
+      // Handle image generation
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: input,
+        timestamp: Date.now()
+      };
+
+      setInput('');
+      setIsLoading(true);
+
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+
+      let effectiveSessionId = activeSessionId;
+      const optimisticMessages = [...messages, userMessage];
+      setMessages(optimisticMessages);
+
+      if (!effectiveSessionId) {
+        effectiveSessionId = onCreateSession(userMessage, modelConfig);
+      } else {
+        onUpdateSession(effectiveSessionId, optimisticMessages);
+      }
+
+      try {
+        // Generate image
+        const result = await imageService.generateImage(imageCommand.prompt);
+        
+        const imageMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'model',
+          content: result.success 
+            ? `Generated image for: "${imageCommand.prompt}"` 
+            : `Failed to generate image: ${result.error}`,
+          timestamp: Date.now(),
+          imageUrl: result.imageUrl,
+          isError: !result.success
+        };
+
+        const finalHistory = [...optimisticMessages, imageMessage];
+        setMessages(finalHistory);
+        
+        if (effectiveSessionId) {
+          onUpdateSession(effectiveSessionId, finalHistory);
+        }
+      } catch (error) {
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          role: 'model',
+          content: 'Failed to generate image. Please try again.',
+          timestamp: Date.now(),
+          isError: true
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // Regular AI chat flow
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',

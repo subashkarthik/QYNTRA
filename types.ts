@@ -4,6 +4,7 @@ export interface Message {
   content: string;
   timestamp: number;
   isError?: boolean;
+  imageUrl?: string; // For AI-generated images
   attachment?: {
     mimeType: string;
     data: string; // base64

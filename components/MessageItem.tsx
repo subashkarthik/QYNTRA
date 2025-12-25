@@ -40,6 +40,35 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onPreview }) 
                   </div>
                 )}
 
+                {/* AI-Generated Image Display */}
+                {message.imageUrl && (
+                  <div className="mb-4 group/image">
+                    <img 
+                      src={message.imageUrl} 
+                      alt="AI Generated" 
+                      className="max-w-full rounded-xl border border-white/10 shadow-2xl hover:shadow-brand-accent/20 transition-shadow cursor-pointer"
+                      onClick={() => window.open(message.imageUrl, '_blank')}
+                    />
+                    <div className="mt-2 flex gap-2">
+                      <a
+                        href={message.imageUrl}
+                        download="qyntra-generated-image.png"
+                        className="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-brand-accent border border-white/5 transition-colors flex items-center gap-2"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Download
+                      </a>
+                      <button
+                        onClick={() => window.open(message.imageUrl, '_blank')}
+                        className="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-slate-400 border border-white/5 transition-colors flex items-center gap-2"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+                        Open
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {message.isError ? (
                   <div className="text-red-300 p-3 border border-red-500/30 bg-red-900/20 rounded-xl flex items-center gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
