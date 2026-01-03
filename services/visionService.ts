@@ -7,7 +7,7 @@ class VisionService {
 
   initialize(apiKey: string): void {
     this.apiKey = apiKey;
-    this.genAI = new GoogleGenerativeAI(apiKey);
+    this.genAI = new GoogleGenAI({ apiKey });
   }
 
   // Convert File to base64
