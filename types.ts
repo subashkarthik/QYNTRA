@@ -5,6 +5,7 @@ export interface Message {
   timestamp: number;
   isError?: boolean;
   imageUrl?: string; // For AI-generated images
+  images?: ImageAttachment[]; // For user-uploaded images
   attachment?: {
     mimeType: string;
     data: string; // base64
@@ -58,6 +59,7 @@ export enum ModelType {
   // Gemini Models
   FLASH = 'gemini-2.5-flash',
   PRO = 'gemini-3-pro-preview',
+  FLASH_VISION = 'gemini-2.0-flash-exp', // Vision-capable model
   
   // Groq Models (updated to current models as of Dec 2024)
   LLAMA_70B = 'llama-3.3-70b-versatile',
@@ -131,4 +133,28 @@ export interface SearchResult {
   timestamp?: number;
   documentId?: string;
   sessionId?: string;
+}
+
+// Code Execution Types
+export interface ExecutionResult {
+  success: boolean;
+  output: string;
+  error?: string;
+  executionTime: number;
+}
+
+export enum CodeLanguage {
+  JAVASCRIPT = 'javascript',
+  HTML = 'html',
+  CSS = 'css',
+  TYPESCRIPT = 'typescript'
+}
+
+// Image Types
+export interface ImageAttachment {
+  id: string;
+  data: string; // base64
+  mimeType: string;
+  name: string;
+  size: number;
 }

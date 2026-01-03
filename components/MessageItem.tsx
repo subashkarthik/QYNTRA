@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Message } from '../types';
 import { CodeBlock } from './CodeBlock';
+import { CodeExecutor } from './CodeExecutor';
+import { CodeLanguage } from '../services/codeExecutionService';
 
 interface MessageItemProps {
   message: Message;
   onPreview?: (code: string, language: string) => void;
+  onExecuteCode?: (code: string, language: string) => void;
 }
 
-export const MessageItem: React.FC<MessageItemProps> = ({ message, onPreview }) => {
+export const MessageItem: React.FC<MessageItemProps> = ({ message, onPreview, onExecuteCode }) => {
   const isUser = message.role === 'user';
   const hasGrounding = message.groundingMetadata?.groundingChunks && message.groundingMetadata.groundingChunks.length > 0;
+  const [showExecutor, setShowExecutor] = useState(false);
+  const [executorCode, setExecutorCode] = useState('');
+  const [executorLanguage, setExecutorLanguage] = useState<CodeLanguage>(CodeLanguage.JAVASCRIPT);
 
   return (
     <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} group animate-in fade-in slide-in-from-bottom-2 duration-500`}>
@@ -81,8 +87,39 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onPreview }) 
                         code(props) {
                           const {children, className, node, ...rest} = props
                           const match = /language-(\w+)/.exec(className || '')
+                          const codeString = String(children).replace(/\n$/, '');
+                          const lang = match ? match[1] : '';
+                          
+                          const handleExecute = () => {
+                            const langMap: Record<string, CodeLanguage> = {
+                              'javascript': CodeLanguage.JAVASCRIPT,
+                              'js': CodeLanguage.JAVASCRIPT,
+                              'typescript': CodeLanguage.TYPESCRIPT,
+                              'ts': CodeLanguage.TYPESCRIPT,
+                              'html': CodeLanguage.HTML,
+                              'css': CodeLanguage.CSS
+                            };
+                            setExecutorCode(codeString);
+                            setExecutorLanguage(langMap[lang.toLowerCase()] || CodeLanguage.JAVASCRIPT);
+                            setShowExecutor(true);
+                          };
+                          
                           return match ? (
-                            <CodeBlock language={match[1]} code={String(children).replace(/\n$/, '')} onPreview={onPreview} />
+                            <div className="relative group/code">
+                              <CodeBlock language={lang} code={codeString} onPreview={onPreview} />
+                              {['javascript', 'js', 'typescript', 'ts', 'html', 'css'].includes(lang.toLowerCase()) && (
+                                <button
+                                  onClick={handleExecute}
+                                  className="absolute top-2 right-2 px-3 py-1.5 bg-brand-accent/90 hover:bg-brand-accent text-white text-xs rounded-lg opacity-0 group-hover/code:opacity-100 transition-all flex items-center gap-1.5 shadow-lg"
+                                  title="Run this code"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                  </svg>
+                                  Run Code
+                                </button>
+                              )}
+                            </div>
                           ) : (
                             <code {...rest} className={`${isUser ? 'bg-white/20 text-white' : 'bg-black/30 text-brand-glow'} px-1.5 py-0.5 rounded text-[11px] font-mono border border-white/5`}>
                               {children}
@@ -132,6 +169,15 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message, onPreview }) 
         </div>
 
       </div>
+      
+      {/* Code Executor Modal */}
+      {showExecutor && (
+        <CodeExecutor
+          initialCode={executorCode}
+          initialLanguage={executorLanguage}
+          onClose={() => setShowExecutor(false)}
+        />
+      )}
     </div>
   );
 };

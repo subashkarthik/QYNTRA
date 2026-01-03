@@ -5,6 +5,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { LiveSessionOverlay } from './components/LiveSessionOverlay';
 import { SplashScreen } from './components/SplashScreen';
 import { DocumentModal } from './components/DocumentModal';
+import { SearchModal } from './components/SearchModal';
 import { Logo } from './components/Logo';
 import { ModelConfig, ChatSession, Message, ThemeId } from './types';
 import { DEFAULT_MODEL_CONFIG, THEMES } from './constants';
@@ -20,6 +21,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showLiveMode, setShowLiveMode] = useState(false);
   const [showDocuments, setShowDocuments] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<ThemeId>('leximera');
   const [showSplash, setShowSplash] = useState(true);
 
@@ -226,6 +228,18 @@ export default function App() {
 
               <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
 
+              {/* Search Button */}
+              <button 
+                onClick={() => setShowSearch(true)}
+                className="p-2 text-slate-400 hover:text-brand-accent hover:bg-white/5 rounded-lg transition-all"
+                title="Search Conversations (Ctrl+K)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+              </button>
+
               {/* Document Library Button */}
               <button 
                 onClick={() => setShowDocuments(true)}
@@ -283,6 +297,16 @@ export default function App() {
         <DocumentModal
           isOpen={showDocuments}
           onClose={() => setShowDocuments(false)}
+        />
+
+        <SearchModal
+          isOpen={showSearch}
+          onClose={() => setShowSearch(false)}
+          sessions={sessions}
+          onSelectSession={(sessionId) => {
+            setActiveSessionId(sessionId);
+            setShowSearch(false);
+          }}
         />
 
         {showLiveMode && (

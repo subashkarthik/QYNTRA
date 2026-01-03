@@ -45,7 +45,7 @@ export const PROVIDER_CONFIGS: Record<AIProvider, Omit<ProviderConfig, 'apiKey' 
   [AIProvider.GEMINI]: {
     provider: AIProvider.GEMINI,
     displayName: 'Google Gemini',
-    models: [ModelType.FLASH, ModelType.PRO]
+    models: [ModelType.FLASH, ModelType.PRO, ModelType.FLASH_VISION]
   },
   [AIProvider.GROQ]: {
     provider: AIProvider.GROQ,
